@@ -4,7 +4,9 @@ export class Store {
   private state: { [key: string]: any };
 
   constructor(reducers = {}, initialState = {}) {
-    this.state = initialState;
+    this.reducers = reducers;
+    // empty action to initialize state
+    this.state = this.reduce(initialState, {});
   }
 
   // store.value to access private member store.state
@@ -13,10 +15,17 @@ export class Store {
   }
 
   dispatch(action) {
-    this.state = {
-      ...this.state,
-      todos: [...this.state.todos, action.payload]
-    };
-    console.log(this.state);
+    this.state = this.reduce(this.state, action);
+  }
+
+  private reduce(state, action) {
+    const newState = {};
+
+    for (const prop in this.reducers) {
+      // newState.todos = this.reducers.todos(state.todos, action);
+      newState[prop] = this.reducers[prop](state[prop], action);
+    }
+
+    return newState;
   }
 }
