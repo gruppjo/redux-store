@@ -44,7 +44,7 @@ export class Store {
       newState[prop] = this.reducers[prop](state[prop], action);
     }
 
-    console.log('STATE:::', state);
+    console.log('STATE:::', newState);
     return newState;
   }
 }
